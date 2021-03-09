@@ -1,0 +1,60 @@
+<resources>
+
+    <style name="Theme.MVVM" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#427CF1</item>
+        <item name="colorPrimaryVariant">@color/design_default_color_error</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">#FFFFFF</item>
+        <item name="colorSecondaryVariant">#F4D507</item>
+        <item name="colorOnSecondary">@color/black</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:statusBarColor">#00000000</item>
+        <item name="android:windowSoftInputMode">adjustResize|stateAlwaysHidden</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="CustomCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="cardBackgroundColor">#000000</item>
+    </style>
+
+    <style name="CustomRecyclerViewSmallTextAppearance" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingStart">5dp</item>
+    </style>
+
+    <style name="CustomTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingStart">5dp</item>
+    </style>
+
+    <style name="CustomSpinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/spinner_toggle</item>
+        <item name="android:popupBackground">@color/white</item>
+    </style>
+
+</resources>

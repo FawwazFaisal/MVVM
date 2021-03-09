@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "80751828781",
+    "project_id": "mvvm-e3ded",
+    "storage_bucket": "mvvm-e3ded.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80751828781:android:9a32c914be855eb61dfda4",
+        "android_client_info": {
+          "package_name": "com.omnisoft.retrofitpractice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "80751828781-ugn9dg48guvj20fkacvmdopdleld1let.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoRd1i2rx5Yt3sJh-c5wU-FcV_asGW77Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "80751828781-ugn9dg48guvj20fkacvmdopdleld1let.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
