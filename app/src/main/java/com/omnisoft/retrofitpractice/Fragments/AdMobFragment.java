@@ -32,6 +32,7 @@ public class AdMobFragment extends Fragment {
     private InterstitialAd mInterstitialAd;
     private TextView mLevelTextView;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
