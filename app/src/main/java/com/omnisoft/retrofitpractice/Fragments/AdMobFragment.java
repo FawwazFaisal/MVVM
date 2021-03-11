@@ -16,12 +16,15 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.omnisoft.retrofitpractice.R;
+
+import java.util.Collections;
+import java.util.List;
 
 public class AdMobFragment extends Fragment {
     // Remove the below line after defining your own ad unit ID.
-    private static final String TOAST_TEXT = "Test ads are being shown. "
-            + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
 
     private static final int START_LEVEL = 1;
     private int mLevel;
@@ -47,6 +50,10 @@ public class AdMobFragment extends Fragment {
         // Create the text view to show the level number.
         mLevelTextView = view.findViewById(R.id.level);
         mLevel = START_LEVEL;
+        List<String> testDeviceIds = Collections.singletonList("E524BDE5E2FDDF478D9A8D9CD0DF2EFA");
+        RequestConfiguration configuration =
+                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+        MobileAds.setRequestConfiguration(configuration);
     }
 
     @Override
@@ -65,9 +72,6 @@ public class AdMobFragment extends Fragment {
         // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
         mInterstitialAd = newInterstitialAd(appContext);
         loadInterstitial();
-        // Toasts the test ad message on the screen.
-        // Remove this after defining your own ad unit ID.
-        Toast.makeText(appContext, TOAST_TEXT, Toast.LENGTH_LONG).show();
     }
 
     private InterstitialAd newInterstitialAd(final Context context) {
@@ -81,7 +85,7 @@ public class AdMobFragment extends Fragment {
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                mNextLevelButton.setEnabled(true);
+                mNextLevelButton.setEnabled(false);
             }
 
             @Override
@@ -99,7 +103,6 @@ public class AdMobFragment extends Fragment {
             mInterstitialAd.show();
         } else {
             Toast.makeText(context, "Ad did not load", Toast.LENGTH_SHORT).show();
-            goToNextLevel(context);
         }
     }
 
@@ -108,6 +111,7 @@ public class AdMobFragment extends Fragment {
         mNextLevelButton.setEnabled(false);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
+        Toast.makeText(requireContext(), String.valueOf(adRequest.isTestDevice(requireContext())), Toast.LENGTH_SHORT).show();
         mInterstitialAd.loadAd(adRequest);
     }
 
