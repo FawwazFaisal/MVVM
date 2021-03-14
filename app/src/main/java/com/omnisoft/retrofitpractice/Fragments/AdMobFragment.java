@@ -16,12 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.RequestConfiguration;
 import com.omnisoft.retrofitpractice.R;
-
-import java.util.Collections;
-import java.util.List;
 
 public class AdMobFragment extends Fragment {
     // Remove the below line after defining your own ad unit ID.
@@ -51,10 +46,9 @@ public class AdMobFragment extends Fragment {
         // Create the text view to show the level number.
         mLevelTextView = view.findViewById(R.id.level);
         mLevel = START_LEVEL;
-        List<String> testDeviceIds = Collections.singletonList("E524BDE5E2FDDF478D9A8D9CD0DF2EFA");
-        RequestConfiguration configuration =
-                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
-        MobileAds.setRequestConfiguration(configuration);
+//        List<String> testDeviceIds = Collections.singletonList("E524BDE5E2FDDF478D9A8D9CD0DF2EFA");
+//        RequestConfiguration configuration = new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+//        MobileAds.setRequestConfiguration(configuration);
     }
 
     @Override
