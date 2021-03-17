@@ -75,17 +75,20 @@ public class AdMobFragment extends Fragment {
         interstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
+                Toast.makeText(context, "Ad Loaded", Toast.LENGTH_SHORT).show();
                 mNextLevelButton.setEnabled(true);
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
+                Toast.makeText(context, "Ad Error", Toast.LENGTH_SHORT).show();
                 mNextLevelButton.setEnabled(false);
             }
 
             @Override
             public void onAdClosed() {
                 // Proceed to the next level.
+                Toast.makeText(context, "Ad Closed", Toast.LENGTH_SHORT).show();
                 goToNextLevel(context);
             }
         });
@@ -104,9 +107,10 @@ public class AdMobFragment extends Fragment {
     private void loadInterstitial() {
         // Disable the next level button and load the ad.
         mNextLevelButton.setEnabled(false);
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        Toast.makeText(requireContext(), String.valueOf(adRequest.isTestDevice(requireContext())), Toast.LENGTH_SHORT).show();
+        AdRequest adRequest = new AdRequest.Builder().build();
+//        AdRequest adRequest = new AdRequest.Builder()
+//                .setRequestAgent("android_studio:ad_template").build();
+//        Toast.makeText(requireContext(), String.valueOf(adRequest.isTestDevice(requireContext())), Toast.LENGTH_SHORT).show();
         mInterstitialAd.loadAd(adRequest);
     }
 

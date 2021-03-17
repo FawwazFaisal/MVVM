@@ -21,7 +21,7 @@
     </style>
 
     <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textSize">@dimen/_10ssp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
@@ -36,8 +36,19 @@
         <item name="cardBackgroundColor">#000000</item>
     </style>
 
+    <style name="CustomDialogCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">5dp</item>
+        <item name="cardBackgroundColor">#2C2C2C</item>
+    </style>
+
+
     <style name="CustomRecyclerViewSmallTextAppearance" parent="Widget.AppCompat.TextView">
-        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textSize">@dimen/_10ssp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:gravity">left|center_vertical</item>
@@ -45,15 +56,32 @@
     </style>
 
     <style name="CustomTextAppearance" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/_10sdp</item>
+        <item name="android:textSize">@dimen/_10ssp</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:gravity">left|center_vertical</item>
         <item name="android:paddingStart">5dp</item>
     </style>
 
+    <style name="CustomBtnTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:layout_height">@dimen/_25sdp</item>
+        <item name="android:textSize">@dimen/_10ssp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="CustomTextAppearanceDialogHeading" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">@dimen/_12ssp</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">left|center_vertical</item>
+        <item name="android:paddingStart">5dp</item>
+    </style>
+
     <style name="CustomSpinner" parent="Widget.AppCompat.Spinner">
-        <item name="android:background">@drawable/spinner_toggle</item>
+        <item name="android:background">@drawable/spinner_bg</item>
         <item name="android:popupBackground">@color/white</item>
     </style>
 

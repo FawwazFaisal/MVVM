@@ -48,9 +48,7 @@ public class BroadcastRegistry extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
             new Handler().postDelayed(() -> {
-                if (isOnline()) {
-                    Toast.makeText(context, "Connected!", Toast.LENGTH_SHORT).show();
-                } else {
+                if (!isOnline()) {
                     Toast.makeText(activity, "No Internet", Toast.LENGTH_SHORT).show();
                 }
             }, 1000);

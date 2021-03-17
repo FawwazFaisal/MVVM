@@ -10,6 +10,7 @@
 
     <TextView
         android:id="@+id/level"
+        style="@style/CustomTextAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_level"
@@ -22,8 +23,10 @@
 
     <Button
         android:id="@+id/next_level_button"
+        style="@style/CustomBtnTextAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/blue_btn"
         android:text="@string/next_level"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

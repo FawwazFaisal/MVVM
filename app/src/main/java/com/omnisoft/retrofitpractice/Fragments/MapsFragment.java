@@ -1,21 +1,13 @@
 package com.omnisoft.retrofitpractice.Fragments;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,6 +17,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.omnisoft.retrofitpractice.Activities.MainActivity;
 import com.omnisoft.retrofitpractice.R;
 import com.omnisoft.retrofitpractice.Utility.LiveLocation;
 import com.omnisoft.retrofitpractice.databinding.FragmentMapsBinding;
@@ -35,8 +28,6 @@ import java.util.List;
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     FragmentMapsBinding bd;
-    String fineLocPermit = Manifest.permission.ACCESS_FINE_LOCATION;
-    String coarseLocPermit = Manifest.permission.ACCESS_COARSE_LOCATION;
     LiveLocation mLocation;
     MarkerOptions marker = new MarkerOptions();
     GoogleMap map;
@@ -53,35 +44,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setList();
-        if (!checkPermission()) {
-            askPermission(false);
-        }
     }
 
-    private boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(requireContext(), fineLocPermit) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(requireContext(), coarseLocPermit) == PackageManager.PERMISSION_GRANTED;
-    }
 
-    private void askPermission(boolean forceAsk) {
-        if (forceAsk) {
-            startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.fromParts("package", requireContext().getPackageName(), null)));
-        } else {
-            requestPermissions(new String[]{coarseLocPermit, fineLocPermit}, 1);
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 1 && this.isVisible()) {
-            boolean neverAskAgain = (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) && !shouldShowRequestPermissionRationale(fineLocPermit);
-            if (neverAskAgain) {
-                Toast.makeText(requireContext(), "Got to App permission and enable Location Permission", Toast.LENGTH_SHORT).show();
-                askPermission(true);
-            }
-        }
-    }
+
 
     private void setLocationListener() {
         mLocation = new LiveLocation();
@@ -127,20 +94,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         map.addMarker(marker);
     }
 
-    @SuppressLint("MissingSuperCall")
     @Override
     public void onResume() {
         super.onResume();
-        if (checkPermission()) {
-            setLocationListener();
-        } else {
-            askPermission(false);
+        if (((MainActivity) requireActivity()).checkPermission()) {
+            if (((MainActivity) requireActivity()).checkGPSState()) {
+                setLocationListener();
+            } else {
+                ((MainActivity) requireActivity()).showEnableGPSDialog(0);
+            }
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mLocation.removeObservers(this);
+        if (mLocation != null) {
+            mLocation.removeObservers(this);
+        }
     }
 }

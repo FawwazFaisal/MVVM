@@ -3,6 +3,7 @@
     package="com.omnisoft.retrofitpractice">
 
     <!-- Include required permissions for Google Mobile Ads to run. -->
+    <!--^ that's a bug right there -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!--
