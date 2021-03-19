@@ -13,20 +13,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.omnisoft.retrofitpractice.R;
 
 public class AdMobFragment extends Fragment {
     // Remove the below line after defining your own ad unit ID.
 
     private static final int START_LEVEL = 1;
+    public static AdRequest adRequest;
+    private static InterstitialAd mInterstitialAd;
+    private static com.google.android.gms.ads.InterstitialAd ad;
     private int mLevel;
     private Button mNextLevelButton;
-    private InterstitialAd mInterstitialAd;
     private TextView mLevelTextView;
-
 
     @Nullable
     @Override
@@ -42,7 +45,13 @@ public class AdMobFragment extends Fragment {
 
         // Create the next level button, which tries to show an interstitial when clicked.
         mNextLevelButton = view.findViewById(R.id.next_level_button);
-
+        mNextLevelButton.setEnabled(true);
+        mNextLevelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToNextLevel(requireContext());
+            }
+        });
         // Create the text view to show the level number.
         mLevelTextView = view.findViewById(R.id.level);
         mLevel = START_LEVEL;
@@ -51,73 +60,65 @@ public class AdMobFragment extends Fragment {
 //        MobileAds.setRequestConfiguration(configuration);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (getActivity() == null || getActivity().getApplicationContext() == null) return;
-        final Context appContext = getActivity().getApplicationContext();
-
-        mNextLevelButton.setEnabled(false);
-        mNextLevelButton.setOnClickListener(new View.OnClickListener() {
+    public void loadAdMob() {
+        adRequest = new AdRequest.Builder().build();
+        Toast.makeText(requireContext(), String.valueOf(adRequest.isTestDevice(requireContext())), Toast.LENGTH_SHORT).show();
+        InterstitialAd.load(requireContext(), getString(R.string.interstitial_ad_unit_id), adRequest, new InterstitialAdLoadCallback() {
             @Override
-            public void onClick(View view) {
-                showInterstitial(appContext);
-            }
-        });
-        // Create the InterstitialAd and set the adUnitId (defined in values/strings.xml).
-        mInterstitialAd = newInterstitialAd(appContext);
-        loadInterstitial();
-    }
-
-    private InterstitialAd newInterstitialAd(final Context context) {
-        InterstitialAd interstitialAd = new InterstitialAd(context);
-        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                Toast.makeText(context, "Ad Loaded", Toast.LENGTH_SHORT).show();
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
                 mNextLevelButton.setEnabled(true);
+                // The mInterstitialAd reference will be null until
+                // an ad is loaded.
+                mInterstitialAd = interstitialAd;
+                showInterstitial(requireContext(), mInterstitialAd);
+                mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        super.onAdDismissedFullScreenContent();
+                        mInterstitialAd = null;
+                        //// perform your code that you wants todo after ad dismissed or closed
+                    }
+
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(com.google.android.gms.ads.AdError adError) {
+                        super.onAdFailedToShowFullScreenContent(adError);
+                        mInterstitialAd = null;
+                        Toast.makeText(requireContext(), adError.getMessage(), Toast.LENGTH_SHORT).show();
+                        /// perform your action here when ad will not load
+                    }
+
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        super.onAdShowedFullScreenContent();
+                        Toast.makeText(requireContext(), "Ad shown successfully", Toast.LENGTH_SHORT).show();
+                        mInterstitialAd = null;
+
+                    }
+                });
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode) {
-                Toast.makeText(context, "Ad Error", Toast.LENGTH_SHORT).show();
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                Toast.makeText(requireContext(), loadAdError.getMessage(), Toast.LENGTH_SHORT).show();
                 mNextLevelButton.setEnabled(false);
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Proceed to the next level.
-                Toast.makeText(context, "Ad Closed", Toast.LENGTH_SHORT).show();
-                goToNextLevel(context);
+                mInterstitialAd = null;
             }
         });
-        return interstitialAd;
     }
 
-    private void showInterstitial(Context context) {
+    private void showInterstitial(Context context, InterstitialAd ad) {
         // Show the ad if it"s ready. Otherwise toast and reload the ad.
-        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
+        if (ad != null) {
+            ad.show(requireActivity());
         } else {
             Toast.makeText(context, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void loadInterstitial() {
-        // Disable the next level button and load the ad.
-        mNextLevelButton.setEnabled(false);
-        AdRequest adRequest = new AdRequest.Builder().build();
-//        AdRequest adRequest = new AdRequest.Builder()
-//                .setRequestAgent("android_studio:ad_template").build();
-//        Toast.makeText(requireContext(), String.valueOf(adRequest.isTestDevice(requireContext())), Toast.LENGTH_SHORT).show();
-        mInterstitialAd.loadAd(adRequest);
-    }
-
     private void goToNextLevel(Context context) {
         // Show the next level and reload the ad to prepare for the level after.
         mLevelTextView.setText(context.getString(R.string.level_text, ++mLevel));
-        mInterstitialAd = newInterstitialAd(context);
-        loadInterstitial();
+        loadAdMob();
     }
 }

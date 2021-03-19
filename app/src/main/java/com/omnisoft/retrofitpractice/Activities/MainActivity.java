@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public boolean checkPermission() {
-        return ContextCompat.checkSelfPermission(this, FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+        return ContextCompat.checkSelfPermission(this, FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 1) {
-            boolean neverAskAgain = (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED) && !shouldShowRequestPermissionRationale(FINE_LOCATION);
+            boolean neverAskAgain = (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED && grantResults[1] == PackageManager.PERMISSION_DENIED) && !shouldShowRequestPermissionRationale(FINE_LOCATION);
             if (neverAskAgain) {
                 Toast.makeText(this, "Go to App settings and enable Location Permission", Toast.LENGTH_SHORT).show();
                 askPermission(true);
