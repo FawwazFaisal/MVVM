@@ -25,7 +25,7 @@
         android:id="@+id/next_level_button"
         style="@style/CustomBtnTextAppearance"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_30sdp"
         android:background="@drawable/blue_btn"
         android:text="@string/next_level"
         app:layout_constraintBottom_toBottomOf="parent"
