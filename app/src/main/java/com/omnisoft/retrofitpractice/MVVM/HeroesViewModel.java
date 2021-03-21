@@ -43,7 +43,6 @@ public class HeroesViewModel extends AndroidViewModel implements TimerCallback {
         repo.deleteAll();
     }
 
-
     void loadHeroesFromDB() {
         allHeroes = repo.getAllHeroesDB();
     }

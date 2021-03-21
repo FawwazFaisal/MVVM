@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding bd;
     BroadcastRegistry receiver;
-    boolean isReceiverRegistered = false;
     Dialog permissionDialog;
 
     //Attach observer by passing context AND Observer Callback
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(bd.getRoot());
         //setFragment();
         setPermitDialog();
-        setUpFragmentAdapterAndViewPager();
     }
 
     private void setPermitDialog() {
@@ -76,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setReceiver() {
-        isReceiverRegistered = true;
         registerReceiver(receiver, new IntentFilter(
                 ConnectivityManager.CONNECTIVITY_ACTION));
         registerReceiver(receiver, new IntentFilter(
@@ -115,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setUpFragmentAdapterAndViewPager();
         receiver = new BroadcastRegistry(this);
         setReceiver();
         if (!checkPermission()) {
@@ -125,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (receiver != null && isReceiverRegistered)
+        if (receiver != null)
             unregisterReceiver(receiver);
     }
 
