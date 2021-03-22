@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -36,7 +35,7 @@ import com.omnisoft.retrofitpractice.databinding.ActivityMainBinding;
 import static com.omnisoft.retrofitpractice.Utility.Constants.COARSE_LOCATION;
 import static com.omnisoft.retrofitpractice.Utility.Constants.FINE_LOCATION;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     ActivityMainBinding bd;
     BroadcastRegistry receiver;
@@ -50,8 +49,14 @@ public class MainActivity extends AppCompatActivity {
         bd = ActivityMainBinding.inflate(getLayoutInflater());
         CustomizeUI.setFullscreen(this);
         setContentView(bd.getRoot());
+        goToMenuActivity();
         //setFragment();
         setPermitDialog();
+    }
+
+    private void goToMenuActivity() {
+        finish();
+        startActivity(new Intent(this, MenuActivity.class));
     }
 
     private void setPermitDialog() {

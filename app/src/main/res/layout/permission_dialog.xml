@@ -37,7 +37,7 @@
 
     <Button
         android:id="@+id/no"
-        style="@style/CustomBtnTextAppearance"
+        style="@style/CustomRedBtn"
         android:layout_width="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
@@ -48,7 +48,7 @@
 
     <Button
         android:id="@+id/yes"
-        style="@style/CustomBtnTextAppearance"
+        style="@style/CustomGreenBtn"
         android:layout_width="wrap_content"
         android:layout_marginEnd="8dp"
         android:background="@drawable/green_btn_bg"
