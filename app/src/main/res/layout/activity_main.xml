@@ -11,7 +11,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#71481D"
+        android:background="#6E6E6E"
         app:layout_constraintDimensionRatio="7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +19,9 @@
         app:tabIndicatorColor="@color/white"
         app:tabMaxWidth="0dp"
         app:tabMode="fixed"
-        app:tabTextAppearance="@style/CustomTabTextAppearance" />
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabTextAppearance="@style/CustomTabTextAppearance"
+        app:tabTextColor="@color/white" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

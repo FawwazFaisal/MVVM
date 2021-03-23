@@ -24,19 +24,14 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         bd = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(bd.getRoot());
-        goToMenuActivity();
+//        goToMenuActivity();
         //setFragment();
+        setUpFragmentAdapterAndViewPager();
     }
 
     private void goToMenuActivity() {
         finish();
         startActivity(new Intent(this, MenuActivity.class));
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setUpFragmentAdapterAndViewPager();
     }
 
     void setUpFragmentAdapterAndViewPager() {
@@ -71,13 +66,10 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-
-
     private void setFragment() {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         transaction.replace(bd.viewPager.getId(), new HeroesFragment());
         transaction.commit();
     }
-
 }

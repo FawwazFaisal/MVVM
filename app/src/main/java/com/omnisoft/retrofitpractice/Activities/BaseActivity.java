@@ -40,16 +40,25 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (receiver != null)
+            unregisterReceiver(receiver);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
-        receiver = new BroadcastRegistry(this);
         setReceiver();
         if (checkPermission()) {
-            checkGPSState();
+            if (!checkGPSState()) {
+                showEnableGPSDialog(0);
+            }
         }
     }
 
     private void setReceiver() {
+        receiver = new BroadcastRegistry(this);
         registerReceiver(receiver, new IntentFilter(
                 ConnectivityManager.CONNECTIVITY_ACTION));
         registerReceiver(receiver, new IntentFilter(
@@ -62,38 +71,14 @@ public class BaseActivity extends AppCompatActivity {
         permissionDialog.setContentView(view);
     }
 
-    public boolean checkGPSState() {
-        boolean isEnabled = false;
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            if (ContextCompat.checkSelfPermission(this, FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                return false;
-            }
-        } else {
-            isEnabled = true;
-        }
-        return isEnabled;
-    }
-
     public boolean checkPermission() {
         return ContextCompat.checkSelfPermission(this, FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
-    public void askPermission(boolean forceAsk) {
-        if (forceAsk) {
-            startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.fromParts("package", this.getPackageName(), null)));
-        } else {
-            requestPermissions(new String[]{COARSE_LOCATION, FINE_LOCATION}, 1);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (receiver != null)
-            unregisterReceiver(receiver);
+    public boolean checkGPSState() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override
@@ -107,17 +92,23 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void askPermission(boolean forceAsk) {
+        if (forceAsk) {
+            startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.fromParts("package", this.getPackageName(), null)));
+        } else {
+            requestPermissions(new String[]{COARSE_LOCATION, FINE_LOCATION}, 1);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
+            onResume();
         } else if (requestCode == 1) {
             if (!checkGPSState()) {
                 showEnableGPSDialog(0);
-            } else {
-                permissionDialog.show();
             }
         }
     }

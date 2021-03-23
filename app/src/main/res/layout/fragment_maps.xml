@@ -36,6 +36,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:entries="@android:array/organizationTypes"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="8"
         app:layout_constraintEnd_toEndOf="@+id/map"

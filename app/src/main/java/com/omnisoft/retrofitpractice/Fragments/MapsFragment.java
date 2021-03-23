@@ -46,10 +46,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         setList();
     }
 
-
-
-
-
     private void setLocationListener() {
         mLocation = new LiveLocation();
         setMaps();

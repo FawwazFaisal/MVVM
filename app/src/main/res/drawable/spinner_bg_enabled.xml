@@ -12,10 +12,6 @@
     <item
         android:width="@dimen/_30sdp"
         android:height="@dimen/_30sdp"
-        android:bottom="5dp"
         android:drawable="@drawable/ic_spinner"
-        android:gravity="right|center_vertical"
-        android:left="5dp"
-        android:right="5dp"
-        android:top="5dp" />
+        android:gravity="right|center_vertical" />
 </layer-list>

@@ -8,7 +8,6 @@ import android.widget.ImageButton;
 import androidx.core.content.ContextCompat;
 
 import com.omnisoft.retrofitpractice.Adapters.MenuAdapter;
-import com.omnisoft.retrofitpractice.App;
 import com.omnisoft.retrofitpractice.CustomViews.DuoMenuView;
 import com.omnisoft.retrofitpractice.R;
 import com.omnisoft.retrofitpractice.databinding.ActivityMenuBinding;
@@ -25,8 +24,8 @@ public class MenuActivity extends BaseActivity implements DuoMenuView.OnMenuClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bd = ActivityMenuBinding.inflate(getLayoutInflater());
-        App.setContext(this);
         setContentView(bd.getRoot());
+
         handleMenu();
         setOnClickListener();
     }
