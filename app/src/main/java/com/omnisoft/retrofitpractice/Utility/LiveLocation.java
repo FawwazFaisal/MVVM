@@ -33,9 +33,7 @@ public class LiveLocation extends LiveData<Location> {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
-                if (locationResult != null && locationResult.getLastLocation() != null) {
-                    setValue(locationResult.getLastLocation());
-                }
+                setValue(locationResult.getLastLocation());
             }
         };
     }

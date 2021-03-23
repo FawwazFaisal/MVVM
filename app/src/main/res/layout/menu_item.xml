@@ -15,9 +15,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/menuOpt"
         app:layout_constraintWidth_default="percent"
-        app:layout_constraintWidth_percent="0.1" />
+        app:layout_constraintWidth_percent="0.1"
+        app:tint="@color/gray" />
 
     <TextView
+        android:textAllCaps="true"
         android:id="@+id/menuOpt"
         style="@style/CustomSmallTextAppearance"
         android:layout_width="wrap_content"
