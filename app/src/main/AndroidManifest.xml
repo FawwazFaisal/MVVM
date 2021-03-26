@@ -21,7 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.MenuActivity"></activity>
+        <activity android:name=".Activities.PostRegistrationForm"></activity>
+        <activity android:name=".Activities.LoginActivity" />
+        <activity android:name=".Activities.MenuActivity" />
         <activity android:name=".Activities.BaseActivity" />
         <!--
         This is the sample AdMob App ID. Insert your own AdMob App ID in quotes
@@ -43,6 +45,11 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".Activities.MainActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Activities.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

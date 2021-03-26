@@ -5,10 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.omnisoft.retrofitpractice.App;
+import com.omnisoft.retrofitpractice.R;
 import com.omnisoft.retrofitpractice.Room.Entity;
 import com.omnisoft.retrofitpractice.databinding.HeroModelViewBinding;
 
@@ -86,7 +89,7 @@ public class HeroRVAdapter extends RecyclerView.Adapter<HeroRVAdapter.RVHolder> 
         }
 
         public void setImageurl(String imageurl) {
-            Glide.with(App.getContext()).load(imageurl).into(bd.imgView);
+            Glide.with(App.getContext()).load(imageurl).placeholder(ContextCompat.getDrawable(App.getContext(), R.drawable.ic_baseline_image_24)).transition(DrawableTransitionOptions.withCrossFade()).into(bd.imgView);
         }
 
         public void setName(String name) {

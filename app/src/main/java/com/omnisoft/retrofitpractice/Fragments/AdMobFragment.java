@@ -60,8 +60,8 @@ public class AdMobFragment extends Fragment {
         mLevelTextView = view.findViewById(R.id.level);
         mLevel = START_LEVEL;
         List<String> testDeviceIds = Collections.singletonList("E524BDE5E2FDDF478D9A8D9CD0DF2EFA");
-//        RequestConfiguration configuration = new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
-        RequestConfiguration configuration = new RequestConfiguration.Builder().build();
+        RequestConfiguration configuration = new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+//        RequestConfiguration configuration = new RequestConfiguration.Builder().build();
         MobileAds.setRequestConfiguration(configuration);
     }
 

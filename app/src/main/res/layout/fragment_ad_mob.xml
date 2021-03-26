@@ -26,7 +26,6 @@
         style="@style/CustomBlueBtn"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_30sdp"
-        android:background="@drawable/blue_btn"
         android:text="@string/next_level"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
