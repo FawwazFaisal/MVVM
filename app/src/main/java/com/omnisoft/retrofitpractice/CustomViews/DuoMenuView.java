@@ -6,7 +6,6 @@ import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -333,6 +332,23 @@ public class DuoMenuView extends RelativeLayout {
     }
 
     /**
+     * Holds the views in this menu
+     */
+    private class MenuViewHolder {
+        private final LinearLayout mMenuOptions;
+        private final ImageView mMenuBackground;
+        private final ViewGroup mMenuHeader;
+        private final ViewGroup mMenuFooter;
+
+        MenuViewHolder(ViewGroup rootView) {
+            this.mMenuOptions = rootView.findViewById(R.id.duo_view_menu_options_layout);
+            this.mMenuBackground = rootView.findViewById(R.id.duo_view_menu_background);
+            this.mMenuHeader = rootView.findViewById(R.id.duo_view_menu_header_layout);
+            this.mMenuFooter = rootView.findViewById(R.id.duo_view_menu_footer_layout);
+        }
+    }
+
+    /**
      * Listener that listens to menu click events.
      */
     public interface OnMenuClickListener {
@@ -351,23 +367,5 @@ public class DuoMenuView extends RelativeLayout {
          * Will be called when user pressed an option view.
          */
         void onOptionClicked(int position, Object objectClicked);
-    }
-
-    /**
-     * Holds the views in this menu
-     */
-    private class MenuViewHolder {
-        private final LinearLayout mMenuOptions;
-        private final ImageView mMenuBackground;
-        private final ViewGroup mMenuHeader;
-        private final ViewGroup mMenuFooter;
-
-        MenuViewHolder(ViewGroup rootView) {
-            this.mMenuOptions = (LinearLayout) rootView.findViewById(R.id.duo_view_menu_options_layout);
-            mMenuOptions.setGravity(Gravity.TOP);
-            this.mMenuBackground = (ImageView) rootView.findViewById(R.id.duo_view_menu_background);
-            this.mMenuHeader = (ViewGroup) rootView.findViewById(R.id.duo_view_menu_header_layout);
-            this.mMenuFooter = (ViewGroup) rootView.findViewById(R.id.duo_view_menu_footer_layout);
-        }
     }
 }

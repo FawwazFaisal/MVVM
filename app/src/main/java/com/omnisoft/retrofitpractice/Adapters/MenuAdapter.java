@@ -10,32 +10,32 @@ import com.omnisoft.retrofitpractice.CustomViews.DuoOptionView;
 import java.util.ArrayList;
 
 /**
- * Created by S.M.Mubbashir.A.Z. on 3/22/2021.
+ * Created by PSD on 13-04-17.
  */
+
 public class MenuAdapter extends BaseAdapter {
-    ArrayList<String> mOptions = new ArrayList<>();
-    ArrayList<DuoOptionView> mOptionViews = new ArrayList<>();
-    ArrayList<Drawable> mIcons = new ArrayList<Drawable>();
+    private final ArrayList<String> mOptionsTitles;
+    private final ArrayList<Drawable> mOptionsIcons;
+    private final ArrayList<DuoOptionView> mOptionViews = new ArrayList<>();
 
-    /*TODO: Add array list of drawable IDs and then use position on
-       getView() to assign drawable based on respective positions*/
-
-    public MenuAdapter(ArrayList<String> options, ArrayList<Drawable> icons) {
-        mOptions = options;
-        mIcons = icons;
+    public MenuAdapter(ArrayList<String> titles, ArrayList<Drawable> icons) {
+        mOptionsTitles = titles;
+        mOptionsIcons = icons;
     }
+
 
     @Override
     public int getCount() {
-        return mOptions.size();
+        return mOptionsTitles.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mOptions.get(position);
+        return mOptionsTitles.get(position);
     }
 
-    public void setViewSelected(int position, boolean selected) {
+    void setViewSelected(int position, boolean selected) {
+
         // Looping through the options in the menu
         // Selecting the chosen option
         for (int i = 0; i < mOptionViews.size(); i++) {
@@ -54,8 +54,8 @@ public class MenuAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final String option = mOptions.get(position);
-        final Drawable icon = mIcons.get(position);
+        final String title = mOptionsTitles.get(position);
+        final Drawable icon = mOptionsIcons.get(position);
         // Using the DuoOptionView to easily recreate the demo
         final DuoOptionView optionView;
         if (convertView == null) {
@@ -63,10 +63,12 @@ public class MenuAdapter extends BaseAdapter {
         } else {
             optionView = (DuoOptionView) convertView;
         }
+
         // Using the DuoOptionView's default selectors
-        optionView.bind(option, icon);
+        optionView.bind(title, icon);
         // Adding the views to an array list to handle view selection
         mOptionViews.add(optionView);
+        setViewSelected(position, true);
         return optionView;
     }
 }

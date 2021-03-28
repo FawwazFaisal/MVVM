@@ -13,8 +13,8 @@ import java.util.ArrayList;
  */
 public class RegistrationFormAdapter extends FragmentPagerAdapter {
 
-    ArrayList<Fragment> fragList;
-    ArrayList<String> titleList;
+    ArrayList<Fragment> fragList = new ArrayList<>();
+    ArrayList<String> titleList = new ArrayList<>();
 
     public RegistrationFormAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);

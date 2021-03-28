@@ -34,13 +34,13 @@ class LoginActivity : AppCompatActivity(), TextWatcherInterface {
         auth = Firebase.auth
         authSateListener = FirebaseAuth.AuthStateListener { it ->
             val currentUser = it.currentUser
-            FirebaseFirestore.getInstance().collection("users").document(bd.email.editText?.text.toString()).get().addOnCompleteListener { it ->
-                if (it.isComplete && it.result.exists()) {
-                    if (currentUser != null)
+            if (currentUser != null) {
+                FirebaseFirestore.getInstance().collection("users").document(currentUser.email.toString()).get().addOnCompleteListener { it ->
+                    if (it.isComplete && it.result.exists()) {
                         loginUser()
-                } else {
-                    auth.signOut()
-                    createNewAccount()
+                    } else {
+                        auth.signOut()
+                    }
                 }
             }
         }
@@ -50,13 +50,11 @@ class LoginActivity : AppCompatActivity(), TextWatcherInterface {
     private fun createNewAccount() {
         SharedPreferences.getPrefs().edit().putString("email", bd.email.editText?.text.toString()).apply()
         startActivity(Intent(this, PostRegistrationForm::class.java))
-        Toast.makeText(this, "Authenticated", Toast.LENGTH_SHORT).show()
     }
 
     private fun loginUser() {
         auth.signInWithEmailAndPassword(bd.email.editText?.text.toString(), bd.password.editText?.text.toString()).addOnCompleteListener(OnCompleteListener {
             SharedPreferences.getPrefs().edit().putString("email", bd.email.editText?.text.toString()).apply()
-            auth.addAuthStateListener(authSateListener)
         })
     }
 
@@ -75,8 +73,7 @@ class LoginActivity : AppCompatActivity(), TextWatcherInterface {
         auth.createUserWithEmailAndPassword(bd.email.editText?.text.toString(), bd.password.editText?.text.toString())
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        auth.addAuthStateListener(authSateListener)
-                        Toast.makeText(this, "Successfully Registered", Toast.LENGTH_SHORT).show()
+                        createNewAccount()
                     } else {
                         Toast.makeText(baseContext, "Registration Failed", Toast.LENGTH_SHORT).show()
                     }

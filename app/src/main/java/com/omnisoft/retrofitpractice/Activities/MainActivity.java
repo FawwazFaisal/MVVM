@@ -1,22 +1,36 @@
 package com.omnisoft.retrofitpractice.Activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.omnisoft.retrofitpractice.Adapters.FragmentAdapter;
+import com.omnisoft.retrofitpractice.Adapters.MenuAdapter;
+import com.omnisoft.retrofitpractice.CustomViews.DuoMenuView;
 import com.omnisoft.retrofitpractice.Fragments.AdMobFragment;
 import com.omnisoft.retrofitpractice.Fragments.HeroesFragment;
 import com.omnisoft.retrofitpractice.Fragments.MapsFragment;
+import com.omnisoft.retrofitpractice.R;
+import com.omnisoft.retrofitpractice.Utility.SharedPreferences;
 import com.omnisoft.retrofitpractice.databinding.ActivityMainBinding;
 
-public class MainActivity extends BaseActivity {
+import java.util.ArrayList;
+
+public class MainActivity extends BaseActivity implements DuoMenuView.OnMenuClickListener, View.OnClickListener {
 
     ActivityMainBinding bd;
+    ArrayList<String> mOptionTitles = new ArrayList<>();
+    ArrayList<Drawable> mOptionIcons = new ArrayList<>();
+    View mFooter;
+    View mHeader;
+    int mCurrentItem = 0;
 
     //Attach observer by passing context AND Observer Callback
     @Override
@@ -24,25 +38,44 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         bd = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(bd.getRoot());
-//        goToMenuActivity();
         //setFragment();
         setUpFragmentAdapterAndViewPager();
+        handleMenu();
     }
 
-    private void goToMenuActivity() {
-        finish();
-        startActivity(new Intent(this, MenuActivity.class));
+    private void handleMenu() {
+        setOptionTitles();
+        setOptionIcons();
+        MenuAdapter adapter = new MenuAdapter(mOptionTitles, mOptionIcons);
+        bd.menu.setAdapter(adapter);
+        mFooter = bd.menu.getFooterView();
+        mHeader = bd.menu.getHeaderView();
+        bd.menu.setSelected(true);
+        bd.menu.setOnMenuClickListener(this);
+        bd.content.menuBtn.setOnClickListener(this);
+    }
+
+    private void setOptionIcons() {
+        mOptionTitles.add("MVVM");
+        mOptionTitles.add("Maps");
+        mOptionTitles.add("Ads");
+    }
+
+    private void setOptionTitles() {
+        mOptionIcons.add(ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_24));
+        mOptionIcons.add(ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_24));
+        mOptionIcons.add(ContextCompat.getDrawable(this, R.drawable.ic_arrow_right_24));
     }
 
     void setUpFragmentAdapterAndViewPager() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentAdapter adapter = new FragmentAdapter(fragmentManager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         adapter.addFragments(new HeroesFragment(), "MVVM");
-        adapter.addFragments(new MapsFragment(), "maps");
-        adapter.addFragments(new AdMobFragment(), "ad");
-        bd.viewPager.setAdapter(adapter);
-        bd.tabLayout.setupWithViewPager(bd.viewPager);
-        bd.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        adapter.addFragments(new MapsFragment(), "MAPS");
+        adapter.addFragments(new AdMobFragment(), "AD");
+        bd.content.viewPager.setAdapter(adapter);
+        bd.content.tabLayout.setupWithViewPager(bd.content.viewPager);
+        bd.content.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -69,7 +102,43 @@ public class MainActivity extends BaseActivity {
     private void setFragment() {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(bd.viewPager.getId(), new HeroesFragment());
+        transaction.replace(bd.content.viewPager.getId(), new HeroesFragment());
         transaction.commit();
+    }
+
+    @Override
+    public void onFooterClicked() {
+        toggleMenu();
+        SharedPreferences.getPrefs().edit().clear().apply();
+        finish();
+        startActivity(new Intent(this, LoginActivity.class));
+    }
+
+    @Override
+    public void onHeaderClicked() {
+    }
+
+    @Override
+    public void onOptionClicked(int position, Object objectClicked) {
+        toggleMenu();
+        if (mCurrentItem != position) {
+            bd.content.viewPager.setCurrentItem(position);
+        }
+        mCurrentItem = position;
+    }
+
+    private void toggleMenu() {
+        if (bd.drawer.isDrawerOpen()) {
+            bd.drawer.closeDrawer();
+        } else {
+            bd.drawer.openDrawer();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == bd.content.menuBtn.getId()) {
+            toggleMenu();
+        }
     }
 }
