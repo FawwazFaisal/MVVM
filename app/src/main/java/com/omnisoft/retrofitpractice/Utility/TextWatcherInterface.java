@@ -8,9 +8,9 @@ import android.view.View;
  */
 public interface TextWatcherInterface {
 
-    void beforeTextChanged(CharSequence s, int start, int count, int after, View view);
+    void beforeTextChanged(CharSequence s, int start, int count, int after, View view, int id);
 
-    void onTextChanged(CharSequence s, int start, int before, int count, View view);
+    void onTextChanged(CharSequence s, int start, int before, int count, View view, int id);
 
-    void afterTextChanged(Editable s, View view);
+    void afterTextChanged(Editable s, View view, int id);
 }

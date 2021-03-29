@@ -24,7 +24,7 @@ public class SplashActivity extends BaseActivity {
                 .thenAnimate(bd.splashLogo).rotation(360).duration(1000).startDelay(1000)
                 .thenAnimate(bd.splashLogo).fadeOut().duration(1000).accelerate().startDelay(1000);
         animator.onStop(() -> {
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
         animator.start();
