@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -19,7 +18,7 @@ import com.omnisoft.retrofitpractice.databinding.ActivityLoginBinding
 
 const val TAG = "LOGIN"
 
-class LoginActivity : AppCompatActivity(), TextWatcherInterface {
+class LoginActivity : BaseActivity(), TextWatcherInterface {
 
     lateinit var bd: ActivityLoginBinding
     lateinit var auth: FirebaseAuth

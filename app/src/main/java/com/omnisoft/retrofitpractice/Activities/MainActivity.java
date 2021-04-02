@@ -19,6 +19,7 @@ import com.omnisoft.retrofitpractice.Fragments.HeroesFragment;
 import com.omnisoft.retrofitpractice.Fragments.MapsFragment;
 import com.omnisoft.retrofitpractice.R;
 import com.omnisoft.retrofitpractice.Utility.SharedPreferences;
+import com.omnisoft.retrofitpractice.Utility.Snack.CustomSnack;
 import com.omnisoft.retrofitpractice.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -128,10 +129,11 @@ public class MainActivity extends BaseActivity implements DuoMenuView.OnMenuClic
     }
 
     private void toggleMenu() {
-        if (bd.drawer.isDrawerOpen()) {
-            bd.drawer.closeDrawer();
+        CustomSnack.showSnackbar(this, "test", "ok");
+        if (bd.root.isDrawerOpen()) {
+            bd.root.closeDrawer();
         } else {
-            bd.drawer.openDrawer();
+            bd.root.openDrawer();
         }
     }
 

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputLayout
 import com.mobsandgeeks.saripaar.Validator
 import com.mobsandgeeks.saripaar.annotation.NotEmpty
+import com.mobsandgeeks.saripaar.annotation.Order
 import com.omnisoft.retrofitpractice.Activities.PostRegistrationForm
 import com.omnisoft.retrofitpractice.App
 import com.omnisoft.retrofitpractice.R
@@ -21,8 +22,10 @@ import com.omnisoft.retrofitpractice.databinding.RegistrationStep1FragmentBindin
 
 class RegistrationStep1 : Fragment(), TextWatcherInterface {
     @NotEmpty(message = "Please enter your first name")
+    @Order(1)
     lateinit var name: EditText
 
+    @Order(2)
     @NotEmpty(message = "Please enter your last name")
     lateinit var lastName: EditText
     lateinit var bd: RegistrationStep1FragmentBinding

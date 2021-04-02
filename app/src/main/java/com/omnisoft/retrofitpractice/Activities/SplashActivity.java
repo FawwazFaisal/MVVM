@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.github.florent37.viewanimator.ViewAnimator;
+import com.omnisoft.retrofitpractice.Utility.CustomizeUI;
 import com.omnisoft.retrofitpractice.databinding.ActivitySplashBinding;
 
 public class SplashActivity extends BaseActivity {
@@ -13,6 +14,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CustomizeUI.setSplashScreenAtr(this);
         bd = ActivitySplashBinding.inflate(getLayoutInflater());
         setContentView(bd.getRoot());
         setAnimation();

@@ -1,7 +1,5 @@
 package com.omnisoft.retrofitpractice.Utility;
 
-import android.view.View;
-
 import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
 
@@ -12,7 +10,6 @@ import java.util.List;
  */
 public class CustomOnClickListener implements Validator.ValidationListener {
     private final CustomOnClickListenerInterface listener;
-    private View view;
 
     public CustomOnClickListener(CustomOnClickListenerInterface listener) {
         this.listener = listener;
@@ -20,7 +17,7 @@ public class CustomOnClickListener implements Validator.ValidationListener {
 
     @Override
     public void onValidationSucceeded() {
-        listener.postValidation(view);
+        listener.postValidation();
     }
 
     @Override

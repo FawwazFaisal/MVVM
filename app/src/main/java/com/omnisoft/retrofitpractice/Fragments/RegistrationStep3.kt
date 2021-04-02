@@ -60,5 +60,4 @@ class RegistrationStep3 : Fragment(), View.OnClickListener {
                     }
                 }
     }
-
 }
