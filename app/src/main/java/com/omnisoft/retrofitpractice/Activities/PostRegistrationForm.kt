@@ -2,7 +2,6 @@ package com.omnisoft.retrofitpractice.Activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -36,7 +35,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
     lateinit var storedVerificationId: String
     lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     lateinit var credential: PhoneAuthCredential
-
+    val user: User = User()
     private val phoneAuthCallback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
@@ -46,7 +45,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
             // 2 - Auto-retrieval. On some devices Google Play services can automatically
             //     detect the incoming verification SMS and perform verification without
             //     user action.
-            Log.d(TAG, "onVerificationCompleted:$credential")
+            (supportFragmentManager.fragments[2] as RegistrationStep3).bd.otp.editText?.setText(credential.smsCode?.toString())
             createAccount()
         }
 
@@ -55,28 +54,22 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
         }
 
         override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-            // The SMS verification code has been sent to the provided phone number, we
-            // now need to ask the user to enter the code and then construct a credential
-            // by combining the code with a verification ID.
-            Log.d(TAG, "onCodeSent:$verificationId")
             bd.viewPager.setCurrentItem(2, true)
             // Save verification ID and resending token so we can use them later
             storedVerificationId = verificationId
             resendToken = token
         }
     }
-    val user: User = User()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         bd = ActivityPostRegistrationFormBinding.inflate(layoutInflater)
         setContentView(bd.root)
+        super.onCreate(savedInstanceState)
         val email = intent.extras!!.getString("email", "")
-        val pass = intent.extras!!.getString("pass", "")
         user.email = email
-        user.pass = pass
         auth = FirebaseAuth.getInstance()
         setUpViewPager()
         setListeners()
-        super.onCreate(savedInstanceState)
     }
 
     private fun setListeners() {
@@ -123,7 +116,8 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
     }
 
     fun createAccount() {
-        auth.createUserWithEmailAndPassword(user.email, user.pass).addOnCompleteListener(OnCompleteListener {
+        val pass = intent.extras!!.getString("pass", "")
+        auth.createUserWithEmailAndPassword(user.email, pass).addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
                 addToDb()
             } else {
@@ -157,12 +151,12 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
     override fun onValidationSucceeded() {
         when (bd.viewPager.currentItem) {
             0 -> {
-                user.name = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep1).name.text.toString()
-                user.lastName = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep1).lastName.text.toString()
+                user.name = (supportFragmentManager.fragments[0] as RegistrationStep1).name.text.toString()
+                user.lastName = (supportFragmentManager.fragments[0] as RegistrationStep1).lastName.text.toString()
                 bd.viewPager.setCurrentItem(1, true)
             }
             1 -> {
-                user.phoneNo = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep2).mobileNo.text.toString()
+                user.phoneNo = (supportFragmentManager.fragments[1] as RegistrationStep2).mobileNo.text.toString()
                 executeMobileVerification()
             }
         }

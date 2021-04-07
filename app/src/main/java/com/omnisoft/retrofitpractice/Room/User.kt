@@ -8,5 +8,5 @@ class User {
     lateinit var lastName: String
     lateinit var phoneNo: String
     lateinit var email: String
-    lateinit var pass: String
+    lateinit var fcmToken: String
 }

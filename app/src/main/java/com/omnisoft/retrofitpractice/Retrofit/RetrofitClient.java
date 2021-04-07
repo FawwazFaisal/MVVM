@@ -5,16 +5,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static RetrofitClient instance = null;
-    private API api;
+    private final API api;
 
-    private RetrofitClient() {
-        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(API.BASE_URL).build();
+    private RetrofitClient(String baseUrl) {
+        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(baseUrl).build();
         api = retrofit.create(API.class);
     }
 
-    public static RetrofitClient getInstance() {
+    public static RetrofitClient getInstance(String baseUrl) {
         if (instance == null) {
-            instance = new RetrofitClient();
+            instance = new RetrofitClient(baseUrl);
         }
         return instance;
     }

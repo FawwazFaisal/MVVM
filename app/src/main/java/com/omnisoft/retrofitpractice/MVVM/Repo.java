@@ -2,16 +2,21 @@ package com.omnisoft.retrofitpractice.MVVM;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.omnisoft.retrofitpractice.App;
+import com.omnisoft.retrofitpractice.FCM.FCMResponseBody;
+import com.omnisoft.retrofitpractice.FCM.Notifier;
 import com.omnisoft.retrofitpractice.Retrofit.CustomAPI;
 import com.omnisoft.retrofitpractice.Retrofit.CustomRetrofitClient;
 import com.omnisoft.retrofitpractice.Retrofit.RetrofitClient;
 import com.omnisoft.retrofitpractice.Room.DAO;
 import com.omnisoft.retrofitpractice.Room.Entity;
 import com.omnisoft.retrofitpractice.Room.SingletonDB;
+import com.omnisoft.retrofitpractice.Utility.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +37,9 @@ public class Repo implements CustomAPI {
 
     public void setAllHeroesMutable(MutableLiveData<List<Entity>> mutableLiveData) {
         allHeroesMutable = mutableLiveData;
-        Call<List<Entity>> call = RetrofitClient.getInstance().getApi().getHeroes();
-        new CustomRetrofitClient(call, "heroes", this);
+        Call<List<Entity>> call = RetrofitClient.getInstance(Constants.DATA_BASE_URL).getApi().getHeroes();
+        CustomRetrofitClient.enqueue(call, "heroes", this);
+        Notifier.sendNotification(App.user.fcmToken, this);
     }
 
     @Override
@@ -42,6 +48,10 @@ public class Repo implements CustomAPI {
             if (tag.equals("heroes")) {
                 ArrayList<Entity> list = (ArrayList<Entity>) response.body();
                 allHeroesMutable.setValue(list);
+            } else if (tag.equals("fcm") && response.code() == 200) {
+                if (((FCMResponseBody) response.body()).success == 1) {
+                    Toast.makeText(App.getContext(), "Did you get the memo?", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

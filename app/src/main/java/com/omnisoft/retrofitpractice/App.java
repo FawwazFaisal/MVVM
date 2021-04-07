@@ -5,8 +5,11 @@ import android.app.Application;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 
+import com.omnisoft.retrofitpractice.Room.User;
+
 public class App extends Application {
     private static Context context;
+    public static User user;
 
     public static Context getContext() {
         return context;

@@ -36,7 +36,7 @@ class RegistrationStep3 : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         if (v?.id == bd.signUp.id) {
             if (otp.text.length == 6) {
-                (requireActivity() as PostRegistrationForm).createAccount()
+                (requireActivity() as PostRegistrationForm).setPhoneAuthCred(otp.text.toString())
             }
         }
     }

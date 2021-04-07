@@ -5,21 +5,26 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.omnisoft.retrofitpractice.Adapters.FragmentAdapter;
 import com.omnisoft.retrofitpractice.Adapters.MenuAdapter;
+import com.omnisoft.retrofitpractice.App;
 import com.omnisoft.retrofitpractice.CustomViews.DuoMenuView;
 import com.omnisoft.retrofitpractice.Fragments.AdMobFragment;
 import com.omnisoft.retrofitpractice.Fragments.HeroesFragment;
 import com.omnisoft.retrofitpractice.Fragments.MapsFragment;
 import com.omnisoft.retrofitpractice.R;
 import com.omnisoft.retrofitpractice.Utility.SharedPreferences;
-import com.omnisoft.retrofitpractice.Utility.Snack.CustomSnack;
 import com.omnisoft.retrofitpractice.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -51,6 +56,7 @@ public class MainActivity extends BaseActivity implements DuoMenuView.OnMenuClic
         MenuAdapter adapter = new MenuAdapter(mOptionTitles, mOptionIcons);
         bd.menu.setAdapter(adapter);
         mFooter = bd.menu.getFooterView();
+        mFooter.findViewById(R.id.logout).setOnClickListener(this);
         mHeader = bd.menu.getHeaderView();
         bd.menu.setSelected(true);
         bd.menu.setOnMenuClickListener(this);
@@ -130,7 +136,6 @@ public class MainActivity extends BaseActivity implements DuoMenuView.OnMenuClic
     }
 
     private void toggleMenu() {
-        CustomSnack.showSnackbar(this, "test", "ok");
         if (bd.root.isDrawerOpen()) {
             bd.root.closeDrawer();
         } else {
@@ -142,6 +147,24 @@ public class MainActivity extends BaseActivity implements DuoMenuView.OnMenuClic
     public void onClick(View v) {
         if (v.getId() == bd.content.menuBtn.getId()) {
             toggleMenu();
+        }
+        if (v.getId() == R.id.logout) {
+            FirebaseMessaging.getInstance().setAutoInitEnabled(false);
+            FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()) {
+                        FirebaseFirestore.getInstance().collection("user").document(App.user.email).update("FCMToken", "").addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    App.user = null;
+                                }
+                            }
+                        });
+                    }
+                }
+            });
         }
     }
 }

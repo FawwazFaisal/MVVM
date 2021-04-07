@@ -49,8 +49,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:18.0.2'
     implementation 'com.google.firebase:firebase-storage:19.2.2'
     implementation 'com.google.firebase:firebase-messaging:21.0.1'
-    implementation 'com.google.firebase:firebase-ads:19.8.0'
+    implementation 'com.google.firebase:firebase-ads:20.0.0'
     implementation 'com.google.firebase:firebase-auth-ktx:20.0.3'
+    implementation 'com.google.firebase:firebase-installations:16.3.5'
 
     //maps
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
@@ -99,7 +100,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:18.0.0"
 
     //Google Ads
-    implementation 'com.google.android.gms:play-services-ads:19.8.0'
+    implementation 'com.google.android.gms:play-services-ads:20.0.0'
 
     //Animations
     implementation 'com.github.florent37:viewanimator:1.1.0'
@@ -110,6 +111,6 @@ dependencies {
 
     //Coroutines and LifeCycle Libraries
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
 
 }

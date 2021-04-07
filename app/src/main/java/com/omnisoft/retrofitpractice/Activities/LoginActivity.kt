@@ -6,12 +6,15 @@ import android.text.Editable
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
+import com.omnisoft.retrofitpractice.App
 import com.omnisoft.retrofitpractice.R
-import com.omnisoft.retrofitpractice.Utility.SharedPreferences
+import com.omnisoft.retrofitpractice.Room.User
 import com.omnisoft.retrofitpractice.Utility.TextChangeListener
 import com.omnisoft.retrofitpractice.Utility.TextWatcherInterface
 import com.omnisoft.retrofitpractice.Utility.ValidationUtils
@@ -36,7 +39,8 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
                 FirebaseFirestore.getInstance().collection("users").document(currentUser.email.toString()).get().addOnCompleteListener { it ->
                     if (it.isComplete) {
                         if (it.result.exists()) {
-                            loginUser()
+                            App.user = it.result.toObject(User::class.java)
+                            initFCM(currentUser.email)
                         } else if (!it.result.exists()) {
                             createNewAccount()
                         }
@@ -57,21 +61,36 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
     }
 
     private fun loginUser() {
-        auth.signInWithEmailAndPassword(bd.email.editText?.text.toString(), bd.password.editText?.text.toString()).addOnCompleteListener {
+        val email = bd.email.editText?.text.toString()
+        auth.signInWithEmailAndPassword(email, bd.password.editText?.text.toString()).addOnCompleteListener { it ->
             if (it.isSuccessful) {
-                SharedPreferences.getPrefs().edit().putString("email", bd.email.editText?.text.toString()).apply()
-                startActivity(Intent(this, MainActivity::class.java))
+                initFCM(email)
             } else {
                 createNewAccount()
             }
         }
     }
 
+    private fun initFCM(email: String) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener {
+            if (it.isSuccessful) {
+                if (it.result.isNotEmpty()) {
+                    App.user.fcmToken = it.result
+                    FirebaseFirestore.getInstance().document(email).update("FCMToken", it.result).addOnSuccessListener {
+                        startActivity(Intent(this, MainActivity::class.java))
+                    }
+                }
+            }
+        })
+    }
+
     private fun setListener() {
         bd.login.setOnClickListener {
             when (it.id) {
-                bd.login.id ->
+                bd.login.id -> {
+                    auth.removeAuthStateListener(authSateListener)
                     validateAndAuth()
+                }
             }
         }
         TextChangeListener(this).addTextChangeListener(bd.email)

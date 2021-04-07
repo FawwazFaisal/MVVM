@@ -40,6 +40,7 @@ public class BaseActivity extends AppCompatActivity {
         CustomizeUI.setFullscreen(this);
         App.setContext(this);
         setPermitDialog();
+        fixTopPadding();
     }
 
     void fixTopPadding() {
