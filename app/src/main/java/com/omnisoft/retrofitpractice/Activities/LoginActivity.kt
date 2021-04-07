@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -33,10 +34,14 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
             val currentUser = it.currentUser
             if (currentUser != null) {
                 FirebaseFirestore.getInstance().collection("users").document(currentUser.email.toString()).get().addOnCompleteListener { it ->
-                    if (it.isComplete && it.result.exists()) {
-                        loginUser()
+                    if (it.isComplete) {
+                        if (it.result.exists()) {
+                            loginUser()
+                        } else if (!it.result.exists()) {
+                            createNewAccount()
+                        }
                     } else {
-                        auth.signOut()
+                        Toast.makeText(this, "Unable to communicate with server", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -45,7 +50,6 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
     }
 
     private fun createNewAccount() {
-        SharedPreferences.getPrefs().edit().putString("email", bd.email.editText?.text.toString()).apply()
         val intent = Intent(this, PostRegistrationForm::class.java)
         intent.putExtra("email", bd.email.editText?.text.toString())
         intent.putExtra("pass", bd.password.editText?.text.toString())
@@ -74,10 +78,6 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
         TextChangeListener(this).addTextChangeListener(bd.password)
     }
 
-    private fun setUpAccount() {
-        loginUser()
-    }
-
     @Override
     override fun onStart() {
         super.onStart()
@@ -90,7 +90,7 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
         } else if (!ValidationUtils.isPasswordValid(bd.password.editText?.text.toString())) {
             bd.password.background = ContextCompat.getDrawable(this, R.drawable.edit_text_error)
         } else {
-            setUpAccount()
+            loginUser()
         }
     }
 
@@ -103,10 +103,6 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
     }
 
     override fun afterTextChanged(s: Editable?, view: View?, id: Int) {
-        if (view?.id == bd.email.id) {
-            bd.email.background = ContextCompat.getDrawable(this, R.drawable.edit_text_enabled)
-        } else if (view?.id == bd.password.id) {
-            bd.password.background = ContextCompat.getDrawable(this, R.drawable.edit_text_enabled)
-        }
+        view?.background = ContextCompat.getDrawable(this, R.drawable.edit_text_enabled)
     }
 }

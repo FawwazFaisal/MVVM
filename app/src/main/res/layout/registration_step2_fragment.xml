@@ -17,16 +17,19 @@
         app:boxBackgroundMode="outline"
         app:boxStrokeWidth="0dp"
         app:hintEnabled="true"
+        app:expandedHintEnabled="true"
+        app:prefixTextColor="@color/grayDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
+        <com.omnisoft.retrofitpractice.Utility.PrefixedEditText
             android:layout_width="match_parent"
             style="@style/CustomEditText"
             android:inputType="phone"
-            android:maxLength="14"
+            android:maxLength="10"
+            android:tag="+92"
             android:hint="Mobile No" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
