@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
@@ -16,6 +17,7 @@ import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mobsandgeeks.saripaar.ValidationError
+import com.mobsandgeeks.saripaar.Validator
 import com.omnisoft.retrofitpractice.Adapters.FragmentAdapter
 import com.omnisoft.retrofitpractice.Adapters.RegistrationFormAdapter
 import com.omnisoft.retrofitpractice.App
@@ -24,12 +26,11 @@ import com.omnisoft.retrofitpractice.Fragments.RegistrationStep2
 import com.omnisoft.retrofitpractice.Fragments.RegistrationStep3
 import com.omnisoft.retrofitpractice.R
 import com.omnisoft.retrofitpractice.Room.User
-import com.omnisoft.retrofitpractice.Utility.CustomOnClickListenerInterface
 import com.omnisoft.retrofitpractice.Utility.Snack.CustomSnack
 import com.omnisoft.retrofitpractice.databinding.ActivityPostRegistrationFormBinding
 import java.util.concurrent.TimeUnit
 
-class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, CustomOnClickListenerInterface, View.OnClickListener {
+class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Validator.ValidationListener, View.OnClickListener {
     lateinit var bd: ActivityPostRegistrationFormBinding
     lateinit var auth: FirebaseAuth
     lateinit var storedVerificationId: String
@@ -66,7 +67,6 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Cus
     }
     val user: User = User()
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         bd = ActivityPostRegistrationFormBinding.inflate(layoutInflater)
         setContentView(bd.root)
         val email = intent.extras!!.getString("email", "")
@@ -76,6 +76,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Cus
         auth = FirebaseAuth.getInstance()
         setUpViewPager()
         setListeners()
+        super.onCreate(savedInstanceState)
     }
 
     private fun setListeners() {
@@ -101,21 +102,6 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Cus
         }
     }
 
-    override fun postValidation() {
-        when (bd.viewPager.currentItem) {
-            0 -> {
-                user.name = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep1).name.text.toString()
-                user.lastName = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep1).lastName.text.toString()
-                bd.viewPager.setCurrentItem(1, true)
-            }
-            1 -> {
-                user.phoneNo = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep2).mobileNo.text.toString()
-                executeMobileVerification()
-            }
-        }
-    }
-
-
     private fun executeMobileVerification() {
         val options = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(user.phoneNo)       // Phone number to verify
@@ -130,10 +116,13 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Cus
         credential = PhoneAuthProvider.getCredential(storedVerificationId, code)
         if (code == credential.smsCode) {
             createAccount()
+        } else {
+            //Add custom snackbar with cancel button as well
+            CustomSnack.showSnackbar(this, "Invalid Code", "RESEND")
         }
     }
 
-    private fun createAccount() {
+    fun createAccount() {
         auth.createUserWithEmailAndPassword(user.email, user.pass).addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
                 addToDb()
@@ -165,10 +154,24 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Cus
                 }
     }
 
+    override fun onValidationSucceeded() {
+        when (bd.viewPager.currentItem) {
+            0 -> {
+                user.name = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep1).name.text.toString()
+                user.lastName = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep1).lastName.text.toString()
+                bd.viewPager.setCurrentItem(1, true)
+            }
+            1 -> {
+                user.phoneNo = ((bd.viewPager.adapter as RegistrationFormAdapter).getItem(bd.viewPager.currentItem) as RegistrationStep2).mobileNo.text.toString()
+                executeMobileVerification()
+            }
+        }
+    }
+
     override fun onValidationFailed(errors: MutableList<ValidationError>?) {
         for (error: ValidationError in errors!!) {
             (error.view.parent.parent as TextInputLayout).background = ContextCompat.getDrawable(App.getContext(), R.drawable.edit_text_error)
-            CustomSnack.showSnackbar(this, error.getCollatedErrorMessage(this).toString(), "DISMISS")
+            (error.view as EditText).error = error.getCollatedErrorMessage(this).toString()
         }
     }
 
