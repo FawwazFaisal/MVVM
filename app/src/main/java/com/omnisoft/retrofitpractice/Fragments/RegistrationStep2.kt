@@ -27,7 +27,7 @@ class RegistrationStep2 : Fragment(), TextWatcherInterface {
     @NotEmpty(message = "Please enter Phone No")
     @Or
     @Pattern(regex = "^3[0-4][0-9][0-9]{7}$", message = "Invalid Mobile No.")
-    @Length(min = 13, max = 13)
+    @Length(min = 10, max = 10)
     lateinit var mobileNo: EditText
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

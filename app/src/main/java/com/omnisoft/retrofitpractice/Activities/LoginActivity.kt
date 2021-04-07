@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
@@ -36,16 +35,18 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
         authSateListener = FirebaseAuth.AuthStateListener { it ->
             val currentUser = it.currentUser
             if (currentUser != null) {
-                FirebaseFirestore.getInstance().collection("users").document(currentUser.email.toString()).get().addOnCompleteListener { it ->
-                    if (it.isComplete) {
-                        if (it.result.exists()) {
-                            App.user = it.result.toObject(User::class.java)
-                            initFCM(currentUser.email)
-                        } else if (!it.result.exists()) {
-                            createNewAccount()
-                        }
+                when (currentUser.email!!.toString().length) {
+                    0 -> {
+                        currentUser.delete()
+                        return@AuthStateListener
+                    }
+                }
+                FirebaseFirestore.getInstance().collection("users").document(currentUser.email!!).get().addOnCompleteListener { it ->
+                    if (it.result.exists()) {
+                        App.user = it.result.toObject(User::class.java)
+                        initFCM(currentUser.email!!)
                     } else {
-                        Toast.makeText(this, "Unable to communicate with server", Toast.LENGTH_SHORT).show()
+                        currentUser.delete()
                     }
                 }
             }
@@ -61,14 +62,21 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
     }
 
     private fun loginUser() {
+        auth.removeAuthStateListener(authSateListener)
         val email = bd.email.editText?.text.toString()
-        auth.signInWithEmailAndPassword(email, bd.password.editText?.text.toString()).addOnCompleteListener { it ->
-            if (it.isSuccessful) {
-                initFCM(email)
+        FirebaseFirestore.getInstance().collection("users").document(email).get().addOnCompleteListener(OnCompleteListener {
+            if (it.result.exists()) {
+                App.user = it.result.toObject(User::class.java)
+                auth.signInWithEmailAndPassword(email, bd.password.editText?.text.toString()).addOnCompleteListener { it ->
+                    if (it.isSuccessful) {
+                        initFCM(email)
+                    }
+                }
             } else {
+                auth.currentUser!!.delete()
                 createNewAccount()
             }
-        }
+        })
     }
 
     private fun initFCM(email: String) {
@@ -88,7 +96,6 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
         bd.login.setOnClickListener {
             when (it.id) {
                 bd.login.id -> {
-                    auth.removeAuthStateListener(authSateListener)
                     validateAndAuth()
                 }
             }
@@ -104,6 +111,7 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
     }
 
     private fun validateAndAuth() {
+        auth.removeAuthStateListener(authSateListener)
         if (!ValidationUtils.isEmailValid(bd.email.editText?.text.toString())) {
             bd.email.background = ContextCompat.getDrawable(this, R.drawable.edit_text_error)
         } else if (!ValidationUtils.isPasswordValid(bd.password.editText?.text.toString())) {

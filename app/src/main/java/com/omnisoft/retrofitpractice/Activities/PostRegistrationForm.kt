@@ -99,7 +99,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
         val options = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(user.phoneNo)       // Phone number to verify
                 .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                .setActivity(this)                 // Activity (for callback binding)
+                .setActivity(this) // Activity (for callback binding)
                 .setCallbacks(phoneAuthCallback)          // OnVerificationStateChangedCallbacks
                 .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
@@ -140,8 +140,9 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
+                        auth.signOut()
                         finish()
-                        startActivity(Intent(this, MainActivity::class.java))
+                        startActivity(Intent(this, LoginActivity::class.java))
                     } else {
                         Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
                     }
@@ -156,7 +157,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
                 bd.viewPager.setCurrentItem(1, true)
             }
             1 -> {
-                user.phoneNo = (supportFragmentManager.fragments[1] as RegistrationStep2).mobileNo.text.toString()
+                user.phoneNo = "+92" + (supportFragmentManager.fragments[1] as RegistrationStep2).mobileNo.text.toString()
                 executeMobileVerification()
             }
         }

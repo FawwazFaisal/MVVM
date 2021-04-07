@@ -30,6 +30,7 @@
             android:inputType="phone"
             android:maxLength="10"
             android:tag="+92"
+            android:imeOptions="actionDone"
             android:hint="Mobile No" />
     </com.google.android.material.textfield.TextInputLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

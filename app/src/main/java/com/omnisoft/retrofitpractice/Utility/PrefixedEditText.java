@@ -46,7 +46,7 @@ public class PrefixedEditText extends AppCompatEditText {
             }
             mOriginalLeftPadding = getCompoundPaddingLeft();
             setPadding((int) (textWidth + mOriginalLeftPadding)
-                    , getPaddingTop(), getPaddingRight() + 5,
+                    , getPaddingTop(), getPaddingRight(),
                     getPaddingBottom());
         }
     }
