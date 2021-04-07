@@ -65,7 +65,7 @@ public class BaseActivity extends AppCompatActivity {
                 LocationManager.PROVIDERS_CHANGED_ACTION));
     }
 
-    private void setPermitDialog() {
+    public void setPermitDialog() {
         permissionDialog = new Dialog(this);
         View view = View.inflate(this, R.layout.permission_dialog, null);
         permissionDialog.setContentView(view);

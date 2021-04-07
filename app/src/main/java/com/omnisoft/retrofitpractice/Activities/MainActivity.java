@@ -42,6 +42,7 @@ public class MainActivity extends BaseActivity implements DuoMenuView.OnMenuClic
         //setFragment();
         setUpFragmentAdapterAndViewPager();
         handleMenu();
+        setPermitDialog();
     }
 
     private void handleMenu() {
