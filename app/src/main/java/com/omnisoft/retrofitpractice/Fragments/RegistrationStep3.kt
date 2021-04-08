@@ -31,6 +31,7 @@ class RegistrationStep3 : Fragment(), View.OnClickListener {
         auth = FirebaseAuth.getInstance()
         otp = bd.otp.editText!!
         bd.signUp.setOnClickListener(this)
+        bd.resendOtp.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -38,6 +39,9 @@ class RegistrationStep3 : Fragment(), View.OnClickListener {
             if (otp.text.length == 6) {
                 (requireActivity() as PostRegistrationForm).setPhoneAuthCred(otp.text.toString())
             }
+        } else if (v?.id == bd.resendOtp.id) {
+            bd.otp.editText?.text?.clear()
+            (requireActivity() as PostRegistrationForm).executeMobileVerification()
         }
     }
 }

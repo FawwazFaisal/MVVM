@@ -29,13 +29,24 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/signUp"
+        android:id="@+id/resendOtp"
         style="@style/CustomBlueBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Resend OTP"
+        app:layout_constraintEnd_toEndOf="@+id/otp"
+        app:layout_constraintStart_toStartOf="@+id/otp"
+        app:layout_constraintTop_toBottomOf="@+id/otp" />
+
+    <Button
+        android:id="@+id/signUp"
+        style="@style/CustomGreenBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Sign Up"
         app:layout_constraintEnd_toEndOf="@+id/otp"
         app:layout_constraintStart_toStartOf="@+id/otp"
-        app:layout_constraintTop_toBottomOf="@+id/otp" />
+        app:layout_constraintTop_toBottomOf="@+id/resendOtp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

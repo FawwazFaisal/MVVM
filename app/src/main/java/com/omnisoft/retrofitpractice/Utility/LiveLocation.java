@@ -23,7 +23,7 @@ public class LiveLocation extends LiveData<Location> {
     @SuppressLint("MissingPermission")
     public LiveLocation() {
         super();
-        locationProviderClient = LocationServices.getFusedLocationProviderClient(App.getContext());
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(App.context);
         request = LocationRequest.create();
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         request.setInterval(1000);

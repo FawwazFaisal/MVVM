@@ -89,7 +89,7 @@ public class HeroRVAdapter extends RecyclerView.Adapter<HeroRVAdapter.RVHolder> 
         }
 
         public void setImageurl(String imageurl) {
-            Glide.with(App.getContext()).load(imageurl).placeholder(ContextCompat.getDrawable(App.getContext(), R.drawable.ic_baseline_image_24)).transition(DrawableTransitionOptions.withCrossFade()).into(bd.imgView);
+            Glide.with(App.context).load(imageurl).placeholder(ContextCompat.getDrawable(App.context, R.drawable.ic_baseline_image_24)).transition(DrawableTransitionOptions.withCrossFade()).into(bd.imgView);
         }
 
         public void setName(String name) {

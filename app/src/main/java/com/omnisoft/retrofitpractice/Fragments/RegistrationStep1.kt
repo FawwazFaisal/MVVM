@@ -59,11 +59,11 @@ class RegistrationStep1 : Fragment(), TextWatcherInterface {
     }
 
     override fun afterTextChanged(s: Editable?, view: View?, id: Int) {
-        view?.background = ContextCompat.getDrawable(App.getContext(), R.drawable.edit_text_enabled)
+        view?.background = ContextCompat.getDrawable(App.context, R.drawable.edit_text_enabled)
         if (id == R.id.name) {
-            (requireActivity() as PostRegistrationForm).user.name = s.toString()
+            App.getUser().name = s.toString()
         } else if (id == R.id.LastName) {
-            (requireActivity() as PostRegistrationForm).user.lastName = s.toString()
+            App.getUser().lastName = s.toString()
         }
     }
 }

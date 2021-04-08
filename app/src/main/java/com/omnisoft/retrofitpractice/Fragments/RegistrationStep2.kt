@@ -15,6 +15,7 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty
 import com.mobsandgeeks.saripaar.annotation.Or
 import com.mobsandgeeks.saripaar.annotation.Pattern
 import com.omnisoft.retrofitpractice.Activities.PostRegistrationForm
+import com.omnisoft.retrofitpractice.App
 import com.omnisoft.retrofitpractice.R
 import com.omnisoft.retrofitpractice.Utility.TextChangeListener
 import com.omnisoft.retrofitpractice.Utility.TextWatcherInterface
@@ -61,6 +62,6 @@ class RegistrationStep2 : Fragment(), TextWatcherInterface {
 
     override fun afterTextChanged(s: Editable?, view: View?, id: Int) {
         view?.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_enabled)
-        (requireActivity() as PostRegistrationForm).user.phoneNo = (view as TextInputLayout).editText?.text.toString()
+        App.getUser().phoneNo = (view as TextInputLayout).editText?.text.toString()
     }
 }

@@ -13,6 +13,6 @@ public class FCMTokenService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
-        FirebaseFirestore.getInstance().collection("users").document(App.user.email).update("FCMToken", s).addOnSuccessListener(aVoid -> App.user.fcmToken = s);
+        FirebaseFirestore.getInstance().collection("users").document(App.getUser().email).update("FCMToken", s).addOnSuccessListener(aVoid -> App.getUser().fcmToken = s);
     }
 }

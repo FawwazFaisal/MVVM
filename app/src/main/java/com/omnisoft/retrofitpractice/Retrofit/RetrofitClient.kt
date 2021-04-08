@@ -1,25 +1,23 @@
-package com.omnisoft.retrofitpractice.Retrofit;
+package com.omnisoft.retrofitpractice.Retrofit
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
-public class RetrofitClient {
-    private static RetrofitClient instance = null;
-    private final API api;
+class RetrofitClient private constructor(baseUrl: String) {
+    val api: API
 
-    private RetrofitClient(String baseUrl) {
-        Retrofit retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(baseUrl).build();
-        api = retrofit.create(API.class);
-    }
-
-    public static RetrofitClient getInstance(String baseUrl) {
-        if (instance == null) {
-            instance = new RetrofitClient(baseUrl);
+    companion object {
+        private var instance: RetrofitClient? = null
+        fun getInstance(baseUrl: String): RetrofitClient? {
+            if (instance == null) {
+                instance = RetrofitClient(baseUrl)
+            }
+            return instance
         }
-        return instance;
     }
 
-    public API getApi() {
-        return api;
+    init {
+        val retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create()).baseUrl(baseUrl).build()
+        api = retrofit.create(API::class.java)
     }
 }

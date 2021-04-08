@@ -56,7 +56,7 @@ public class PrefixedEditText extends AppCompatEditText {
         super.onDraw(canvas);
         String prefix = (String) getTag();
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(ContextCompat.getColor(App.getContext(), R.color.grayDark));
+        paint.setColor(ContextCompat.getColor(App.context, R.color.grayDark));
         paint.setTextSize(getTextSize());
         canvas.drawText(prefix, mOriginalLeftPadding,
                 getLineBounds(0, null), paint);

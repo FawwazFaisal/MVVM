@@ -10,10 +10,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
+import com.google.firebase.auth.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mobsandgeeks.saripaar.ValidationError
 import com.mobsandgeeks.saripaar.Validator
@@ -24,7 +21,6 @@ import com.omnisoft.retrofitpractice.Fragments.RegistrationStep1
 import com.omnisoft.retrofitpractice.Fragments.RegistrationStep2
 import com.omnisoft.retrofitpractice.Fragments.RegistrationStep3
 import com.omnisoft.retrofitpractice.R
-import com.omnisoft.retrofitpractice.Room.User
 import com.omnisoft.retrofitpractice.Utility.Snack.CustomSnack
 import com.omnisoft.retrofitpractice.databinding.ActivityPostRegistrationFormBinding
 import java.util.concurrent.TimeUnit
@@ -35,7 +31,6 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
     lateinit var storedVerificationId: String
     lateinit var resendToken: PhoneAuthProvider.ForceResendingToken
     lateinit var credential: PhoneAuthCredential
-    val user: User = User()
     private val phoneAuthCallback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         override fun onVerificationCompleted(credential: PhoneAuthCredential) {
@@ -66,7 +61,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
         setContentView(bd.root)
         super.onCreate(savedInstanceState)
         val email = intent.extras!!.getString("email", "")
-        user.email = email
+        App.getUser().email = email
         auth = FirebaseAuth.getInstance()
         setUpViewPager()
         setListeners()
@@ -95,12 +90,17 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
         }
     }
 
-    private fun executeMobileVerification() {
-        val options = PhoneAuthOptions.newBuilder(auth)
-                .setPhoneNumber(user.phoneNo)       // Phone number to verify
+    fun executeMobileVerification() {
+        val optionsBuilder = PhoneAuthOptions.newBuilder(auth)
+
+//        if(resendToken!=null){
+//            optionsBuilder.setForceResendingToken(resendToken)
+//        }
+        val options: PhoneAuthOptions = optionsBuilder
+                .setPhoneNumber(App.getUser().phoneNo)   // Phone number to verify
                 .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                .setActivity(this) // Activity (for callback binding)
-                .setCallbacks(phoneAuthCallback)          // OnVerificationStateChangedCallbacks
+                .setActivity(this)                // Activity (for callback binding)
+                .setCallbacks(phoneAuthCallback) // OnVerificationStateChangedCallbacks
                 .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
@@ -117,8 +117,9 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
 
     fun createAccount() {
         val pass = intent.extras!!.getString("pass", "")
-        auth.createUserWithEmailAndPassword(user.email, pass).addOnCompleteListener(OnCompleteListener {
+        auth.createUserWithEmailAndPassword(App.getUser().email, pass).addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
+                auth.signOut()
                 addToDb()
             } else {
                 Toast.makeText(this, it.exception?.message, Toast.LENGTH_SHORT).show()
@@ -127,7 +128,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
     }
 
     private fun addToDb() {
-        FirebaseFirestore.getInstance().collection("user").document(user.email).set(user).addOnCompleteListener(OnCompleteListener {
+        FirebaseFirestore.getInstance().collection("user").document(App.getUser().email!!).set(App.getUser()).addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
                 signInWithPhoneAuthCredential(credential)
             } else {
@@ -140,9 +141,11 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        auth.signOut()
-                        finish()
-                        startActivity(Intent(this, LoginActivity::class.java))
+                        auth.sendSignInLinkToEmail(App.getUser().email, ActionCodeSettings.newBuilder().build()).addOnCompleteListener(OnCompleteListener {
+                            auth.signOut()
+                            finish()
+                            startActivity(Intent(this, LoginActivity::class.java))
+                        })
                     } else {
                         Toast.makeText(this, task.exception?.message, Toast.LENGTH_SHORT).show()
                     }
@@ -152,12 +155,12 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
     override fun onValidationSucceeded() {
         when (bd.viewPager.currentItem) {
             0 -> {
-                user.name = (supportFragmentManager.fragments[0] as RegistrationStep1).name.text.toString()
-                user.lastName = (supportFragmentManager.fragments[0] as RegistrationStep1).lastName.text.toString()
+                App.getUser().name = (supportFragmentManager.fragments[0] as RegistrationStep1).name.text.toString()
+                App.getUser().lastName = (supportFragmentManager.fragments[0] as RegistrationStep1).lastName.text.toString()
                 bd.viewPager.setCurrentItem(1, true)
             }
             1 -> {
-                user.phoneNo = "+92" + (supportFragmentManager.fragments[1] as RegistrationStep2).mobileNo.text.toString()
+                App.getUser().phoneNo = "+92" + (supportFragmentManager.fragments[1] as RegistrationStep2).mobileNo.text.toString()
                 executeMobileVerification()
             }
         }
@@ -165,7 +168,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
 
     override fun onValidationFailed(errors: MutableList<ValidationError>?) {
         for (error: ValidationError in errors!!) {
-            (error.view.parent.parent as TextInputLayout).background = ContextCompat.getDrawable(App.getContext(), R.drawable.edit_text_error)
+            (error.view.parent.parent as TextInputLayout).background = ContextCompat.getDrawable(App.context, R.drawable.edit_text_error)
             (error.view as EditText).error = error.getCollatedErrorMessage(this).toString()
         }
     }

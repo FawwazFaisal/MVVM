@@ -37,9 +37,9 @@ public class Repo implements CustomAPI {
 
     public void setAllHeroesMutable(MutableLiveData<List<Entity>> mutableLiveData) {
         allHeroesMutable = mutableLiveData;
-        Call<List<Entity>> call = RetrofitClient.getInstance(Constants.DATA_BASE_URL).getApi().getHeroes();
+        Call<List<Entity>> call = RetrofitClient.Companion.getInstance(Constants.DATA_BASE_URL).getApi().getHeroes();
         CustomRetrofitClient.enqueue(call, "heroes", this);
-        Notifier.sendNotification(App.user.fcmToken, this);
+        Notifier.sendNotification(App.getUser().fcmToken, this);
     }
 
     @Override
@@ -50,7 +50,7 @@ public class Repo implements CustomAPI {
                 allHeroesMutable.setValue(list);
             } else if (tag.equals("fcm") && response.code() == 200) {
                 if (((FCMResponseBody) response.body()).success == 1) {
-                    Toast.makeText(App.getContext(), "Did you get the memo?", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(App.context, "Did you get the memo?", Toast.LENGTH_SHORT).show();
                 }
             }
         }

@@ -9,6 +9,6 @@ import com.omnisoft.retrofitpractice.App;
  */
 public class SharedPreferences {
     public static android.content.SharedPreferences getPrefs() {
-        return App.getContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        return App.context.getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
     }
 }

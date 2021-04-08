@@ -35,15 +35,9 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
         authSateListener = FirebaseAuth.AuthStateListener { it ->
             val currentUser = it.currentUser
             if (currentUser != null) {
-                when (currentUser.email!!.toString().length) {
-                    0 -> {
-                        currentUser.delete()
-                        return@AuthStateListener
-                    }
-                }
                 FirebaseFirestore.getInstance().collection("users").document(currentUser.email!!).get().addOnCompleteListener { it ->
                     if (it.result.exists()) {
-                        App.user = it.result.toObject(User::class.java)
+                        App.setUser(it.result.toObject(User::class.java))
                         initFCM(currentUser.email!!)
                     } else {
                         currentUser.delete()
@@ -66,14 +60,14 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
         val email = bd.email.editText?.text.toString()
         FirebaseFirestore.getInstance().collection("users").document(email).get().addOnCompleteListener(OnCompleteListener {
             if (it.result.exists()) {
-                App.user = it.result.toObject(User::class.java)
+                App.setUser(it.result.toObject(User::class.java))
                 auth.signInWithEmailAndPassword(email, bd.password.editText?.text.toString()).addOnCompleteListener { it ->
                     if (it.isSuccessful) {
                         initFCM(email)
                     }
                 }
             } else {
-                auth.currentUser!!.delete()
+                auth.currentUser?.delete()
                 createNewAccount()
             }
         })
@@ -83,7 +77,7 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
         FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
                 if (it.result.isNotEmpty()) {
-                    App.user.fcmToken = it.result
+                    App.getUser().fcmToken = it.result
                     FirebaseFirestore.getInstance().document(email).update("FCMToken", it.result).addOnSuccessListener {
                         startActivity(Intent(this, MainActivity::class.java))
                     }
