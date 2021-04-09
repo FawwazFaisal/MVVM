@@ -154,7 +154,7 @@ public class MainActivity extends BaseActivity implements DuoMenuView.OnMenuClic
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        FirebaseFirestore.getInstance().collection("user").document(App.getUser().email).update("FCMToken", "").addOnCompleteListener(new OnCompleteListener<Void>() {
+                        FirebaseFirestore.getInstance().collection("user").document(App.getUser().getEmail()).update("FCMToken", "").addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "80751828781-qgtv3fonos029j3mi5r98dd54ducovn7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.omnisoft.retrofitpractice",
+            "certificate_hash": "3b65f1dfa5f2967cbf4be9ae169bb8805b1f9bb6"
+          }
+        },
+        {
           "client_id": "80751828781-ugn9dg48guvj20fkacvmdopdleld1let.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -32,7 +40,8 @@
             }
           ]
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-2222542310234704~7956256698"
     }
   ],
   "configuration_version": "1"

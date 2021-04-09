@@ -39,7 +39,7 @@ public class Repo implements CustomAPI {
         allHeroesMutable = mutableLiveData;
         Call<List<Entity>> call = RetrofitClient.Companion.getInstance(Constants.DATA_BASE_URL).getApi().getHeroes();
         CustomRetrofitClient.enqueue(call, "heroes", this);
-        Notifier.sendNotification(App.getUser().fcmToken, this);
+        Notifier.sendNotification(App.getUser().getFcmToken(), this);
     }
 
     @Override

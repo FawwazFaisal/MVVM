@@ -8,11 +8,12 @@ import com.omnisoft.retrofitpractice.App;
 
 public class FCMTokenService extends FirebaseMessagingService {
     public FCMTokenService() {
+
     }
 
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
-        FirebaseFirestore.getInstance().collection("users").document(App.getUser().email).update("FCMToken", s).addOnSuccessListener(aVoid -> App.getUser().fcmToken = s);
+        FirebaseFirestore.getInstance().collection("users").document(App.getUser().getEmail()).update("FCMToken", s).addOnSuccessListener(aVoid -> App.getUser().setFcmToken(s));
     }
 }

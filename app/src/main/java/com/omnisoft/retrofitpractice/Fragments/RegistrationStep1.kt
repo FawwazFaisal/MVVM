@@ -63,7 +63,7 @@ class RegistrationStep1 : Fragment(), TextWatcherInterface {
         if (id == R.id.name) {
             App.getUser().name = s.toString()
         } else if (id == R.id.LastName) {
-            App.getUser().lastName = s.toString()
+            App.getUser()
         }
     }
 }

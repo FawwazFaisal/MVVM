@@ -10,7 +10,10 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mobsandgeeks.saripaar.ValidationError
 import com.mobsandgeeks.saripaar.Validator
@@ -21,6 +24,7 @@ import com.omnisoft.retrofitpractice.Fragments.RegistrationStep1
 import com.omnisoft.retrofitpractice.Fragments.RegistrationStep2
 import com.omnisoft.retrofitpractice.Fragments.RegistrationStep3
 import com.omnisoft.retrofitpractice.R
+import com.omnisoft.retrofitpractice.Utility.ActionCode
 import com.omnisoft.retrofitpractice.Utility.Snack.CustomSnack
 import com.omnisoft.retrofitpractice.databinding.ActivityPostRegistrationFormBinding
 import java.util.concurrent.TimeUnit
@@ -128,7 +132,7 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
     }
 
     private fun addToDb() {
-        FirebaseFirestore.getInstance().collection("user").document(App.getUser().email!!).set(App.getUser()).addOnCompleteListener(OnCompleteListener {
+        FirebaseFirestore.getInstance().collection("user").document(App.getUser().email).set(App.getUser()).addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
                 signInWithPhoneAuthCredential(credential)
             } else {
@@ -141,7 +145,8 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        auth.sendSignInLinkToEmail(App.getUser().email, ActionCodeSettings.newBuilder().build()).addOnCompleteListener(OnCompleteListener {
+                        val actionCode = ActionCode().actionCodeSettings
+                        auth.sendSignInLinkToEmail(App.getUser().email, actionCode).addOnCompleteListener(OnCompleteListener {
                             auth.signOut()
                             finish()
                             startActivity(Intent(this, LoginActivity::class.java))

@@ -23,7 +23,7 @@ public class App extends Application {
 
     public static User getUser() {
         if (user == null) {
-            user = new User();
+            user = new User("");
         }
         return user;
     }
