@@ -113,13 +113,13 @@ public class AdMobFragment extends Fragment {
                     super.onAdShowedFullScreenContent();
                     Toast.makeText(requireContext(), "Ad shown successfully", Toast.LENGTH_SHORT).show();
                     mInterstitialAd = null;
-
                 }
             });
         } else {
             Toast.makeText(context, "Ad did not load", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void goToNextLevel(Context context) {
         // Show the next level and reload the ad to prepare for the level after.
         mLevelTextView.setText(context.getString(R.string.level_text, ++mLevel));

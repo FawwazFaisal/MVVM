@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "80751828781-qgtv3fonos029j3mi5r98dd54ducovn7.apps.googleusercontent.com",
+          "client_id": "80751828781-h5mrf11jcogvpnnnk8l4jts57vkv06d6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.omnisoft.retrofitpractice",
-            "certificate_hash": "3b65f1dfa5f2967cbf4be9ae169bb8805b1f9bb6"
+            "certificate_hash": "07d7f8f1726f5391f4479af0b20619c7912f51c9"
           }
         },
         {

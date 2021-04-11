@@ -132,7 +132,17 @@ class PostRegistrationForm : BaseActivity(), ViewPager.OnPageChangeListener, Val
     }
 
     private fun addToDb() {
-        FirebaseFirestore.getInstance().collection("user").document(App.getUser().email).set(App.getUser()).addOnCompleteListener(OnCompleteListener {
+//        val user = hashMapOf(
+//                "name" to "App.getUser().name",
+//                "lastName" to "App.getUser().lastName",
+//                "email" to "App.getUser().email",
+//                "phoneNo" to "App.getUser().phoneNo",
+//                "fcmToken" to "App.getUser().fcmToken"
+//        )
+        val firestore = FirebaseFirestore.getInstance()
+        val collectionReference = firestore.collection("users")
+        val documentReference = collectionReference.document(App.getUser().email)
+        documentReference.set(App.getUser()).addOnCompleteListener(OnCompleteListener {
             if (it.isSuccessful) {
                 signInWithPhoneAuthCredential(credential)
             } else {

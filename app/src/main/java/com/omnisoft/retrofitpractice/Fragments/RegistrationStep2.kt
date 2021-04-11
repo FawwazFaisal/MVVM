@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.textfield.TextInputLayout
 import com.mobsandgeeks.saripaar.Validator
 import com.mobsandgeeks.saripaar.annotation.Length
 import com.mobsandgeeks.saripaar.annotation.NotEmpty
@@ -62,6 +61,6 @@ class RegistrationStep2 : Fragment(), TextWatcherInterface {
 
     override fun afterTextChanged(s: Editable?, view: View?, id: Int) {
         view?.background = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_enabled)
-        App.getUser().phoneNo = (view as TextInputLayout).editText?.text.toString()
+        App.getUser().phoneNo = s.toString()
     }
 }

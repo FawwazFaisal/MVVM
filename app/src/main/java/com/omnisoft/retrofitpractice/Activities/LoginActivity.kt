@@ -34,8 +34,8 @@ class LoginActivity : BaseActivity(), TextWatcherInterface {
         auth = Firebase.auth
         authSateListener = FirebaseAuth.AuthStateListener { it ->
             val currentUser = it.currentUser
-            if (currentUser != null) {
-                FirebaseFirestore.getInstance().collection("users").document(currentUser.email!!).get().addOnCompleteListener { it ->
+            if (currentUser != null && currentUser.email.isNotEmpty()) {
+                FirebaseFirestore.getInstance().collection("users").document(currentUser.email).get().addOnCompleteListener { it ->
                     if (it.result.exists()) {
                         App.setUser(it.result.toObject(User::class.java))
                         initFCM(currentUser.email!!)
