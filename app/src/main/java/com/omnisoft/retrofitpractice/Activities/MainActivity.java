@@ -1,6 +1,5 @@
 package com.omnisoft.retrofitpractice.Activities;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -24,7 +23,6 @@ import com.omnisoft.retrofitpractice.Fragments.AdMobFragment;
 import com.omnisoft.retrofitpractice.Fragments.HeroesFragment;
 import com.omnisoft.retrofitpractice.Fragments.MapsFragment;
 import com.omnisoft.retrofitpractice.R;
-import com.omnisoft.retrofitpractice.Utility.SharedPreferences;
 import com.omnisoft.retrofitpractice.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
@@ -117,9 +115,6 @@ public class MainActivity extends BaseActivity implements DuoMenuView.OnMenuClic
     @Override
     public void onFooterClicked() {
         toggleMenu();
-        SharedPreferences.getPrefs().edit().clear().apply();
-        finish();
-        startActivity(new Intent(this, LoginActivity.class));
     }
 
     @Override
